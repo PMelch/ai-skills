@@ -31,3 +31,4 @@ npm-debug.log*
 .codex/
 .gemini/
 bun.lock
+/.claude/CLAUDE.md
