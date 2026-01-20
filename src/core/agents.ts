@@ -7,7 +7,7 @@ import { GeminiAgent } from './agents/gemini.js';
 import { CodexAgent } from './agents/codex.js';
 import { CopilotAgent } from './agents/copilot.js';
 
-export { AgentInfo };
+export type { AgentInfo };
 
 export class AgentManager {
   private agents: Map<string, BaseAgent>;
