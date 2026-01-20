@@ -12,7 +12,7 @@ export class CodexAgent extends BaseAgent {
   }
 
   async updateProjectConfiguration(skills: string[], projectRoot: string = process.cwd()): Promise<void> {
-    const configPath = join(this.homeDir, '.codex', 'config.toml');
+    const configPath = join(projectRoot, '.codex', 'config.toml');
     
     let config: any = {};
     try {

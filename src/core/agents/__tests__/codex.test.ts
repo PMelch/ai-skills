@@ -50,7 +50,7 @@ describe('CodexAgent', () => {
       
       await codexAgent.updateProjectConfiguration(skills, projectDir);
       
-      const configPath = join(homeDir, '.codex', 'config.toml');
+      const configPath = join(projectDir, '.codex', 'config.toml');
       const content = await fs.readFile(configPath, 'utf-8');
       const parsed = TOML.parse(content) as any;
       
@@ -64,8 +64,8 @@ describe('CodexAgent', () => {
     });
 
     it('should append to existing configuration', async () => {
-        const configPath = join(homeDir, '.codex', 'config.toml');
-        await fs.mkdir(join(homeDir, '.codex'), { recursive: true });
+        const configPath = join(projectDir, '.codex', 'config.toml');
+        await fs.mkdir(join(projectDir, '.codex'), { recursive: true });
         
         const initialConfig = {
             skills: {
@@ -93,8 +93,8 @@ describe('CodexAgent', () => {
     });
 
     it('should update enabled status if skill already exists', async () => {
-        const configPath = join(homeDir, '.codex', 'config.toml');
-        await fs.mkdir(join(homeDir, '.codex'), { recursive: true });
+        const configPath = join(projectDir, '.codex', 'config.toml');
+        await fs.mkdir(join(projectDir, '.codex'), { recursive: true });
         
         const initialConfig = {
             skills: {
@@ -116,8 +116,8 @@ describe('CodexAgent', () => {
     });
 
     it('should preserve other top-level keys', async () => {
-        const configPath = join(homeDir, '.codex', 'config.toml');
-        await fs.mkdir(join(homeDir, '.codex'), { recursive: true });
+        const configPath = join(projectDir, '.codex', 'config.toml');
+        await fs.mkdir(join(projectDir, '.codex'), { recursive: true });
         
         const initialConfig = `
             other_key = "value"
@@ -139,8 +139,8 @@ describe('CodexAgent', () => {
     });
 
     it('should disable skills that are not in the selected list', async () => {
-        const configPath = join(homeDir, '.codex', 'config.toml');
-        await fs.mkdir(join(homeDir, '.codex'), { recursive: true });
+        const configPath = join(projectDir, '.codex', 'config.toml');
+        await fs.mkdir(join(projectDir, '.codex'), { recursive: true });
         
         // Initial state: skill-a and skill-b are enabled
         const initialConfig = {
