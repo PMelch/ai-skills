@@ -118,4 +118,39 @@ describe('Init Command', () => {
         expect(mockConfigManager.initialize).toHaveBeenCalledWith(['codex']);
         expect(mockAgentManager.createSymlinks).toHaveBeenCalledWith('codex');
     });
+
+    it('should accept --agents flag and skip interactive prompt', async () => {
+        // User provides agents via CLI flag
+        await init({ agents: ['claude', 'codex'] });
+
+        // Should NOT call inquirer when agents are provided
+        expect(inquirer.checkbox).not.toHaveBeenCalled();
+        
+        // Should initialize with provided agents
+        expect(mockConfigManager.initialize).toHaveBeenCalledWith(['claude', 'codex']);
+        expect(mockAgentManager.createSymlinks).toHaveBeenCalledWith('claude');
+        expect(mockAgentManager.createSymlinks).toHaveBeenCalledWith('codex');
+    });
+
+    it('should validate agent names when provided via --agents flag', async () => {
+        // Mock console.error to suppress output
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+        const processExitSpy = jest.spyOn(process, 'exit').mockImplementation(((code?: number) => {
+            throw new Error('process.exit');
+        }) as any);
+
+        await expect(init({ agents: ['invalid-agent'] })).rejects.toThrow('process.exit');
+
+        expect(consoleErrorSpy).toHaveBeenCalled();
+        expect(processExitSpy).toHaveBeenCalledWith(1);
+
+        consoleErrorSpy.mockRestore();
+        processExitSpy.mockRestore();
+    });
+
+    it('should accept comma-separated agents string', async () => {
+        await init({ agents: ['claude,codex'] });
+
+        expect(mockConfigManager.initialize).toHaveBeenCalledWith(['claude', 'codex']);
+    });
 });

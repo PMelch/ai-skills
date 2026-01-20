@@ -4,7 +4,15 @@ import ora from 'ora';
 import { ConfigManager } from '../core/config.js';
 import { AgentManager } from '../core/agents.js';
 
-export async function init(): Promise<void> {
+interface InitOptions {
+  agents?: string[];
+}
+
+function parseCommaSeparated(values: string[]): string[] {
+  return values.flatMap(v => v.split(',').map(s => s.trim())).filter(Boolean);
+}
+
+export async function init(options?: InitOptions): Promise<void> {
   console.log(chalk.bold.cyan('\n🚀 AI Skills Setup\n'));
 
   const spinner = ora('Checking system...').start();
@@ -18,15 +26,33 @@ export async function init(): Promise<void> {
     const supportedAgents = agentManager.getSupportedAgents();
     spinner.succeed('System check complete');
     
-    // Prompt user to select agents
-    const selectedAgents = await checkbox({
-      message: 'Select agents to configure:',
-      choices: supportedAgents.map(agent => ({
-        name: agent.name,
-        value: agent.id,
-        checked: detectedAgents.some(a => a.id === agent.id)
-      }))
-    });
+    let selectedAgents: string[];
+    
+    // Check if agents were provided via CLI
+    if (options?.agents && options.agents.length > 0) {
+      selectedAgents = parseCommaSeparated(options.agents);
+      
+      // Validate provided agents
+      const supportedAgentIds = supportedAgents.map(a => a.id);
+      const invalidAgents = selectedAgents.filter(id => !supportedAgentIds.includes(id));
+      
+      if (invalidAgents.length > 0) {
+        spinner.fail('Invalid agents provided');
+        console.error(chalk.red(`\n❌ Invalid agent(s): ${invalidAgents.join(', ')}`));
+        console.log(chalk.dim(`Valid agents: ${supportedAgentIds.join(', ')}`));
+        process.exit(1);
+      }
+    } else {
+      // Prompt user to select agents
+      selectedAgents = await checkbox({
+        message: 'Select agents to configure:',
+        choices: supportedAgents.map(agent => ({
+          name: agent.name,
+          value: agent.id,
+          checked: detectedAgents.some(a => a.id === agent.id)
+        }))
+      });
+    }
     
     if (selectedAgents.length === 0) {
       console.log(chalk.yellow('\n⚠️  No agents selected. Exiting.'));

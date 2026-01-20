@@ -14,12 +14,15 @@ program
 program
   .command('init')
   .description('Setup central skill configuration in ~/.config/ai-skills')
-  .action(init);
+  .option('--agents <agents...>', 'Agents to configure (comma-separated or multiple flags)')
+  .action((options) => init(options));
 
 program
   .command('activate')
   .description('Select and activate skills for current project')
-  .action(activate);
+  .option('--skills <skills...>', 'Skills to activate (comma-separated or multiple flags)')
+  .option('--agents <agents...>', 'Agents to target (comma-separated or multiple flags)')
+  .action((options) => activate(options));
 
 program
   .command('sync')

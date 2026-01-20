@@ -5,7 +5,16 @@ import { ConfigManager } from '../core/config.js';
 import { AgentManager } from '../core/agents.js';
 import { SkillManager } from '../core/skills.js';
 
-export async function activate(): Promise<void> {
+interface ActivateOptions {
+  skills?: string[];
+  agents?: string[];
+}
+
+function parseCommaSeparated(values: string[]): string[] {
+  return values.flatMap(v => v.split(',').map(s => s.trim())).filter(Boolean);
+}
+
+export async function activate(options?: ActivateOptions): Promise<void> {
   console.log(chalk.bold.cyan('\n🎯 Activate AI Skills\n'));
 
   const spinner = ora('Loading configuration...').start();
@@ -35,15 +44,32 @@ export async function activate(): Promise<void> {
     // Load existing project config
     const currentSkills = await skillManager.getActiveSkills();
     
-    // Prompt for skill selection
-    const selectedSkills = await checkbox({
-      message: 'Select skills to activate:',
-      choices: availableSkills.map(skill => ({
-        name: skill,
-        value: skill,
-        checked: currentSkills.includes(skill)
-      }))
-    });
+    let selectedSkills: string[];
+    
+    // Check if skills were provided via CLI
+    if (options?.skills && options.skills.length > 0) {
+      selectedSkills = parseCommaSeparated(options.skills);
+      
+      // Validate provided skills
+      const invalidSkills = selectedSkills.filter(skill => !availableSkills.includes(skill));
+      
+      if (invalidSkills.length > 0) {
+        spinner.fail('Invalid skills provided');
+        console.error(chalk.red(`\n❌ Invalid skill(s): ${invalidSkills.join(', ')}`));
+        console.log(chalk.dim(`Available skills: ${availableSkills.join(', ')}`));
+        process.exit(1);
+      }
+    } else {
+      // Prompt for skill selection
+      selectedSkills = await checkbox({
+        message: 'Select skills to activate:',
+        choices: availableSkills.map(skill => ({
+          name: skill,
+          value: skill,
+          checked: currentSkills.includes(skill)
+        }))
+      });
+    }
     
     // Get configured agents
     const configuredAgents = await configManager.getConfiguredAgents();
@@ -55,15 +81,33 @@ export async function activate(): Promise<void> {
     detectedAgents.forEach(a => allAgentsMap.set(a.id, a));
     const allAgents = Array.from(allAgentsMap.values());
     
-    // Select which agents to activate for
-    const selectedAgents = await checkbox({
-      message: 'Activate for which agents:',
-      choices: allAgents.map(agent => ({
-        name: agent.name,
-        value: agent.id,
-        checked: true
-      }))
-    });
+    let selectedAgents: string[];
+    
+    // Check if agents were provided via CLI
+    if (options?.agents && options.agents.length > 0) {
+      selectedAgents = parseCommaSeparated(options.agents);
+      
+      // Validate provided agents
+      const allAgentIds = allAgents.map(a => a.id);
+      const invalidAgents = selectedAgents.filter(id => !allAgentIds.includes(id));
+      
+      if (invalidAgents.length > 0) {
+        spinner.fail('Invalid agents provided');
+        console.error(chalk.red(`\n❌ Invalid agent(s): ${invalidAgents.join(', ')}`));
+        console.log(chalk.dim(`Available agents: ${allAgentIds.join(', ')}`));
+        process.exit(1);
+      }
+    } else {
+      // Select which agents to activate for
+      selectedAgents = await checkbox({
+        message: 'Activate for which agents:',
+        choices: allAgents.map(agent => ({
+          name: agent.name,
+          value: agent.id,
+          checked: true
+        }))
+      });
+    }
     
     if (selectedAgents.length === 0) {
       console.log(chalk.yellow('\n⚠️  No agents selected. Exiting.'));
