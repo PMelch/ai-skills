@@ -4,6 +4,7 @@ import ora from 'ora';
 import { ConfigManager } from '../core/config.js';
 import { AgentManager } from '../core/agents.js';
 import { SkillManager } from '../core/skills.js';
+import { GeminiSettingsManager } from '../core/gemini.js';
 
 export async function activate(): Promise<void> {
   console.log(chalk.bold.cyan('\n🎯 Activate AI Skills\n'));
@@ -14,6 +15,7 @@ export async function activate(): Promise<void> {
     const configManager = new ConfigManager();
     const agentManager = new AgentManager();
     const skillManager = new SkillManager();
+    const geminiManager = new GeminiSettingsManager();
     
     // Check if initialized
     if (!await configManager.isInitialized()) {
@@ -47,12 +49,19 @@ export async function activate(): Promise<void> {
     
     // Get configured agents
     const configuredAgents = await configManager.getConfiguredAgents();
+    const detectedAgents = await agentManager.detectAgents();
+    
+    // Merge agents
+    const allAgentsMap = new Map();
+    configuredAgents.forEach(a => allAgentsMap.set(a.id, a));
+    detectedAgents.forEach(a => allAgentsMap.set(a.id, a));
+    const allAgents = Array.from(allAgentsMap.values());
     
     // Select which agents to activate for
     const selectedAgents = await checkbox({
       message: 'Activate for which agents:',
-      choices: configuredAgents.map(agent => ({
-        name: `${agent.icon} ${agent.name}`,
+      choices: allAgents.map(agent => ({
+        name: agent.name,
         value: agent.id,
         checked: true
       }))
@@ -62,10 +71,21 @@ export async function activate(): Promise<void> {
       console.log(chalk.yellow('\n⚠️  No agents selected. Exiting.'));
       return;
     }
+
+    // Update global config with newly selected agents
+    const uniqueAgents = Array.from(new Set([
+        ...configuredAgents.map(a => a.id), 
+        ...selectedAgents
+    ]));
+    await configManager.updateConfig({ agents: uniqueAgents });
     
     // Save project configuration
     spinner.start('Saving project configuration...');
     await skillManager.saveProjectConfig(selectedSkills, selectedAgents);
+    
+    // Save to Gemini settings
+    await geminiManager.addActiveSkills(selectedSkills);
+    
     spinner.succeed('Project configuration saved');
     
     // Apply to agents

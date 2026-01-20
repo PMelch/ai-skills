@@ -58,7 +58,7 @@ export class ConfigManager {
     await fs.writeFile(this.configFile, JSON.stringify(updated, null, 2), 'utf-8');
   }
 
-  async getConfiguredAgents(): Promise<Array<{ id: string; name: string; icon: string }>> {
+  async getConfiguredAgents(): Promise<import('./agents.js').AgentInfo[]> {
     const config = await this.getConfig();
     const { getAgentInfo } = await import('./agents.js');
     return config.agents.map(id => getAgentInfo(id));

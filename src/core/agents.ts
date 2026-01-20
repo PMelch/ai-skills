@@ -5,7 +5,6 @@ import { homedir } from 'os';
 export interface AgentInfo {
   id: string;
   name: string;
-  icon: string;
   skillsPath: string;
 }
 
@@ -13,13 +12,11 @@ const AGENTS: AgentInfo[] = [
   {
     id: 'claude',
     name: 'Claude',
-    icon: '🤖',
     skillsPath: join(homedir(), '.claude', 'skills')
   },
   {
     id: 'gemini',
     name: 'Gemini',
-    icon: '✨',
     skillsPath: join(homedir(), '.gemini', 'skills')
   }
 ];

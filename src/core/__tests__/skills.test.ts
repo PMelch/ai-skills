@@ -1,7 +1,15 @@
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
+import * as os from 'os';
+
+// Mock os.homedir BEFORE importing other modules
+jest.mock('os', () => ({
+  ...jest.requireActual('os') as any,
+  homedir: jest.fn()
+}));
+
 import { SkillManager } from '../skills.js';
 import { ConfigManager } from '../config.js';
 
@@ -9,7 +17,6 @@ describe('SkillManager', () => {
   let tempDir: string;
   let tempProjectDir: string;
   let skillManager: SkillManager;
-  let originalHome: string | undefined;
   let originalCwd: string;
 
   beforeEach(async () => {
@@ -18,9 +25,8 @@ describe('SkillManager', () => {
     tempProjectDir = join(tempDir, 'project');
     await fs.mkdir(tempProjectDir, { recursive: true });
 
-    // Mock HOME directory
-    originalHome = process.env.HOME;
-    process.env.HOME = tempDir;
+    // Mock homedir to return tempDir
+    (os.homedir as jest.Mock).mockReturnValue(tempDir);
 
     // Change to temp project directory
     originalCwd = process.cwd();
@@ -36,11 +42,6 @@ describe('SkillManager', () => {
   afterEach(async () => {
     // Restore original directory
     process.chdir(originalCwd);
-
-    // Restore HOME
-    if (originalHome) {
-      process.env.HOME = originalHome;
-    }
 
     // Clean up temp directory
     try {

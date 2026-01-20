@@ -29,7 +29,7 @@ export async function init(): Promise<void> {
     const selectedAgents = await checkbox({
       message: 'Select agents to configure:',
       choices: availableAgents.map(agent => ({
-        name: `${agent.icon} ${agent.name}`,
+        name: agent.name,
         value: agent.id,
         checked: true
       }))

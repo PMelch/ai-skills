@@ -2,31 +2,32 @@ import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
+import * as os from 'os';
+
+// Mock os.homedir BEFORE importing ConfigManager
+jest.mock('os', () => ({
+  ...jest.requireActual('os') as any,
+  homedir: jest.fn()
+}));
+
 import { ConfigManager } from '../config.js';
 
 describe('ConfigManager', () => {
   let tempDir: string;
   let configManager: ConfigManager;
-  let originalHome: string | undefined;
 
   beforeEach(async () => {
     // Create temporary directory for testing
     tempDir = join(tmpdir(), `ai-skills-test-${Date.now()}`);
     await fs.mkdir(tempDir, { recursive: true });
 
-    // Mock HOME directory
-    originalHome = process.env.HOME;
-    process.env.HOME = tempDir;
+    // Mock homedir to return tempDir
+    (os.homedir as jest.Mock).mockReturnValue(tempDir);
 
     configManager = new ConfigManager();
   });
 
   afterEach(async () => {
-    // Restore HOME
-    if (originalHome) {
-      process.env.HOME = originalHome;
-    }
-
     // Clean up temp directory
     try {
       await fs.rm(tempDir, { recursive: true, force: true });
@@ -132,7 +133,6 @@ describe('ConfigManager', () => {
       expect(agents[0]).toMatchObject({
         id: 'claude',
         name: 'Claude',
-        icon: '🤖',
       });
     });
 
