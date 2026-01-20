@@ -24,3 +24,10 @@ coverage/
 # Logs
 *.log
 npm-debug.log*
+
+# Project-specific AI agent configurations (created by activate command)
+.ai-skills.json
+.github/copilot-instructions.md
+.codex/
+.gemini/
+bun.lock
