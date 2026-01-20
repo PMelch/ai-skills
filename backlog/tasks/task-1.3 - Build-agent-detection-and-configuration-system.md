@@ -1,9 +1,10 @@
 ---
 id: task-1.3
 title: Build agent detection and configuration system
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-01-20 14:53'
+updated_date: '2026-01-20 21:37'
 labels:
   - agents
   - extensibility
@@ -26,8 +27,8 @@ Create a plugin-like system for different AI agents:
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Agent detection works for Claude and Gemini
-- [ ] #2 Each agent has proper config writer
-- [ ] #3 System is extensible for new agents
-- [ ] #4 Documents how to add new agents
+- [x] #1 Agent detection works for Claude and Gemini
+- [x] #2 Each agent has proper config writer
+- [x] #3 System is extensible for new agents
+- [x] #4 Documents how to add new agents
 <!-- AC:END -->

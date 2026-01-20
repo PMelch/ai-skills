@@ -135,7 +135,7 @@ project-dir/
 - **Codex** (`~/.codex/skills`)
 - **Gemini** (`~/.gemini/skills`)
 
-More agents can be easily added!
+More agents can be easily added! See [Adding New Agents](docs/adding-new-agents.md) for details.
 
 ## Development
 
