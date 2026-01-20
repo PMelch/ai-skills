@@ -42,6 +42,9 @@ This will:
 2. Detect available AI agents (Claude, Gemini)
 3. Create symlinks from agent folders to the central directory
 
+**Options:**
+- `--agents <agents...>` - Specify agents to configure (e.g., `--agents claude gemini` or `--agents claude,gemini`)
+
 ### Sync Skills
 
 Sync newly added skills and remove orphaned symlinks:
@@ -74,6 +77,26 @@ This will:
 2. Let you select which skills to activate
 3. Choose which agents to configure
 4. Save configuration in `.ai-skills.json`
+5. Update agent-specific configuration files (e.g., `.copilot/instructions.md`, `.claude/CLAUDE.md`)
+
+**Options:**
+- `--skills <skills...>` - Specify skills to activate without prompts (e.g., `--skills skill-1 skill-2` or `--skills skill-1,skill-2`)
+- `--agents <agents...>` - Specify agents to target without prompts (e.g., `--agents copilot claude` or `--agents copilot,claude`)
+
+**Examples:**
+```bash
+# Interactive mode (prompts for selection)
+ai-skills activate
+
+# Activate specific skills for all configured agents
+ai-skills activate --skills tdd-protocol security-auditor
+
+# Activate skills for specific agents
+ai-skills activate --skills tdd-protocol --agents copilot claude
+
+# Comma-separated format
+ai-skills activate --skills tdd-protocol,security-auditor --agents copilot
+```
 
 ## Directory Structure
 
@@ -87,13 +110,29 @@ This will:
   ├── skill-1 -> ~/.config/ai-skills/skill-1
   └── skill-2 -> ~/.config/ai-skills/skill-2
 
+~/.copilot/skills/            # Copilot skills (symlinked)
+  ├── skill-1 -> ~/.config/ai-skills/skill-1
+  └── skill-2 -> ~/.config/ai-skills/skill-2
+
+~/.codex/skills/              # Codex skills (symlinked)
+  └── skill-3 -> ~/.config/ai-skills/skill-3
+
 ~/.gemini/skills/             # Gemini skills (symlinked)
   └── skill-3 -> ~/.config/ai-skills/skill-3
+
+project-dir/
+  ├── .ai-skills.json         # Project-specific skill activation
+  ├── .github/
+  │   └── copilot-instructions.md  # Copilot configuration
+  └── .claude/
+      └── CLAUDE.md           # Claude configuration
 ```
 
 ## Supported Agents
 
-- **Claude** (`~/.claude/skills`)
+- **Claude** (`~/.claude/skills`, config: `.claude/CLAUDE.md`)
+- **Copilot** (`~/.copilot/skills`, config: `.github/copilot-instructions.md`)
+- **Codex** (`~/.codex/skills`)
 - **Gemini** (`~/.gemini/skills`)
 
 More agents can be easily added!
