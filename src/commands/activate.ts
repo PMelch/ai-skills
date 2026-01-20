@@ -4,7 +4,6 @@ import ora from 'ora';
 import { ConfigManager } from '../core/config.js';
 import { AgentManager } from '../core/agents.js';
 import { SkillManager } from '../core/skills.js';
-import { GeminiSettingsManager } from '../core/gemini.js';
 
 export async function activate(): Promise<void> {
   console.log(chalk.bold.cyan('\n🎯 Activate AI Skills\n'));
@@ -15,7 +14,6 @@ export async function activate(): Promise<void> {
     const configManager = new ConfigManager();
     const agentManager = new AgentManager();
     const skillManager = new SkillManager();
-    const geminiManager = new GeminiSettingsManager();
     
     // Check if initialized
     if (!await configManager.isInitialized()) {
@@ -82,9 +80,6 @@ export async function activate(): Promise<void> {
     // Save project configuration
     spinner.start('Saving project configuration...');
     await skillManager.saveProjectConfig(selectedSkills, selectedAgents);
-    
-    // Save to Gemini settings
-    await geminiManager.addActiveSkills(selectedSkills);
     
     spinner.succeed('Project configuration saved');
     

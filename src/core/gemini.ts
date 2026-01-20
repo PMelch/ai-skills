@@ -15,8 +15,8 @@ export class GeminiSettingsManager {
   private settingsPath: string;
   private geminiDir: string;
 
-  constructor() {
-    const cwd = process.cwd();
+  constructor(rootDir?: string) {
+    const cwd = rootDir || process.cwd();
     this.geminiDir = path.join(cwd, '.gemini');
     this.settingsPath = path.join(this.geminiDir, 'settings.json');
   }

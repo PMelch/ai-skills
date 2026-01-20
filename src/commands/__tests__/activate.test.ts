@@ -4,7 +4,6 @@ import * as inquirer from '@inquirer/prompts';
 import { ConfigManager } from '../../core/config.js';
 import { AgentManager } from '../../core/agents.js';
 import { SkillManager } from '../../core/skills.js';
-import { GeminiSettingsManager } from '../../core/gemini.js';
 
 // Mocks
 jest.mock('chalk', () => ({
@@ -30,7 +29,6 @@ jest.mock('@inquirer/prompts', () => ({
 jest.mock('../../core/config.js', () => ({ ConfigManager: jest.fn() }));
 jest.mock('../../core/agents.js', () => ({ AgentManager: jest.fn() }));
 jest.mock('../../core/skills.js', () => ({ SkillManager: jest.fn() }));
-jest.mock('../../core/gemini.js', () => ({ GeminiSettingsManager: jest.fn() }));
 
 // Mock implementations
 const mockConfigManager = {
@@ -47,10 +45,6 @@ const mockSkillManager = {
     getActiveSkills: jest.fn<() => Promise<string[]>>().mockResolvedValue([]),
     saveProjectConfig: jest.fn<(skills: string[], agents: string[]) => Promise<void>>().mockResolvedValue(undefined),
 };
-const mockGeminiManager = {
-    addActiveSkill: jest.fn<(skill: string) => Promise<void>>().mockResolvedValue(undefined),
-    addActiveSkills: jest.fn<(skills: string[]) => Promise<void>>().mockResolvedValue(undefined),
-};
 
 describe('Activate Command', () => {
     beforeEach(() => {
@@ -60,7 +54,6 @@ describe('Activate Command', () => {
         (ConfigManager as unknown as jest.Mock).mockImplementation(() => mockConfigManager);
         (AgentManager as unknown as jest.Mock).mockImplementation(() => mockAgentManager);
         (SkillManager as unknown as jest.Mock).mockImplementation(() => mockSkillManager);
-        (GeminiSettingsManager as unknown as jest.Mock).mockImplementation(() => mockGeminiManager);
 
         // Reset default mock returns
         mockConfigManager.getConfiguredAgents.mockResolvedValue([{ id: 'agent1', name: 'Agent 1' }]);
@@ -68,17 +61,6 @@ describe('Activate Command', () => {
 
         // Mock checkbox responses
         (inquirer.checkbox as any).mockResolvedValue(['skill-1']); // Default response
-    });
-
-    it('should save selected skills to .gemini/settings.json', async () => {
-        (inquirer.checkbox as any)
-            .mockResolvedValueOnce(['skill-1']) // skills
-            .mockResolvedValueOnce(['agent1']); // agents
-
-        await activate();
-
-        expect(GeminiSettingsManager).toHaveBeenCalled();
-        expect(mockGeminiManager.addActiveSkills).toHaveBeenCalledWith(['skill-1']);
     });
 
     it('should include detected but unconfigured agents in selection and update config', async () => {
