@@ -24,7 +24,11 @@
     "cli",
     "agent"
   ],
-  "author": "",
+  "author": "PMelch",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/petermelchart/ai-skills.git"
+  },
   "license": "MIT",
   "dependencies": {
     "@iarna/toml": "^2.2.5",
