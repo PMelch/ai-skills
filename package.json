@@ -1,5 +1,5 @@
 {
-  "name": "ai-skills",
+  "name": "@pmelch/ai-skills",
   "version": "0.1.0",
   "description": "CLI tool to manage AI agent skills centrally",
   "type": "module",
@@ -14,7 +14,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint src/**/*.ts",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "ai",
@@ -23,6 +24,9 @@
     "gemini",
     "cli",
     "agent"
+  ],
+  "files": [
+    "dist"
   ],
   "author": "PMelch",
   "repository": {

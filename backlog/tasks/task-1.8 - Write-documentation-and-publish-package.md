@@ -1,10 +1,10 @@
 ---
 id: task-1.8
 title: Write documentation and publish package
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-01-20 14:54'
-updated_date: '2026-01-20 14:54'
+updated_date: '2026-01-20 21:49'
 labels:
   - documentation
   - publishing
@@ -30,9 +30,9 @@ Complete the project with documentation and publishing:
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 README is comprehensive
-- [ ] #2 Package is published successfully
-- [ ] #3 npx/uvx installation works
-- [ ] #4 Version command exists
-- [ ] #5 Examples are tested
+- [x] #1 README is comprehensive
+- [x] #2 Package is published successfully
+- [x] #3 npx/uvx installation works
+- [x] #4 Version command exists
+- [x] #5 Examples are tested
 <!-- AC:END -->

@@ -137,6 +137,24 @@ project-dir/
 
 More agents can be easily added! See [Adding New Agents](docs/adding-new-agents.md) for details.
 
+## Troubleshooting
+
+### Permission Issues
+If you encounter permission errors (EACCES) when creating symlinks:
+1. Check the permissions of your configuration directory: `ls -la ~/.config/ai-skills`
+2. Ensure you have write access to the agent directories (e.g., `~/.claude/skills`)
+
+### Missing Skills in Agents
+If skills are not showing up in your agent:
+1. Run `ai-skills sync` to refresh symlinks
+2. Check if the skill exists in `~/.config/ai-skills`
+3. Verify the agent configuration directory exists
+
+### "Agent not found"
+If `ai-skills init` doesn't detect your agent:
+1. Manually create the agent's configuration directory (e.g., `mkdir -p ~/.claude`)
+2. Run `ai-skills init` again
+
 ## Development
 
 ```bash
