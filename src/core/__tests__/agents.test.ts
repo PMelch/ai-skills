@@ -76,6 +76,30 @@ describe('AgentManager', () => {
     it('should throw error for unknown agent', () => {
       expect(() => getAgentInfo('unknown')).toThrow('Unknown agent: unknown');
     });
+
+    it('should return Codex agent info', () => {
+      const agent = getAgentInfo('codex');
+      expect(agent).toMatchObject({
+        id: 'codex',
+        name: 'Codex',
+      });
+    });
+
+    it('should return Copilot agent info', () => {
+      const agent = getAgentInfo('copilot');
+      expect(agent).toMatchObject({
+        id: 'copilot',
+        name: 'Copilot',
+      });
+    });
+  });
+
+  describe('getSupportedAgents', () => {
+    it('should return all supported agents', () => {
+      const agents = agentManager.getSupportedAgents();
+      expect(agents).toHaveLength(4);
+      expect(agents.map(a => a.id)).toEqual(expect.arrayContaining(['claude', 'gemini', 'codex', 'copilot']));
+    });
   });
 
   describe('detectAgents', () => {

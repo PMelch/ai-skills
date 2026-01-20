@@ -14,24 +14,17 @@ export async function init(): Promise<void> {
     const agentManager = new AgentManager();
     
     // Detect available agents
-    const availableAgents = await agentManager.detectAgents();
+    const detectedAgents = await agentManager.detectAgents();
+    const supportedAgents = agentManager.getSupportedAgents();
     spinner.succeed('System check complete');
-    
-    if (availableAgents.length === 0) {
-      console.log(chalk.yellow('\n⚠️  No AI agent folders detected'));
-      console.log(chalk.dim('Expected locations:'));
-      console.log(chalk.dim('  - ~/.claude/skills'));
-      console.log(chalk.dim('  - ~/.gemini/skills'));
-      return;
-    }
     
     // Prompt user to select agents
     const selectedAgents = await checkbox({
       message: 'Select agents to configure:',
-      choices: availableAgents.map(agent => ({
+      choices: supportedAgents.map(agent => ({
         name: agent.name,
         value: agent.id,
-        checked: true
+        checked: detectedAgents.some(a => a.id === agent.id)
       }))
     });
     

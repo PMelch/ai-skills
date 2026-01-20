@@ -18,6 +18,16 @@ const AGENTS: AgentInfo[] = [
     id: 'gemini',
     name: 'Gemini',
     skillsPath: join(homedir(), '.gemini', 'skills')
+  },
+  {
+    id: 'codex',
+    name: 'Codex',
+    skillsPath: join(homedir(), '.codex', 'skills')
+  },
+  {
+    id: 'copilot',
+    name: 'Copilot',
+    skillsPath: join(homedir(), '.copilot', 'skills')
   }
 ];
 
@@ -30,6 +40,10 @@ export function getAgentInfo(id: string): AgentInfo {
 }
 
 export class AgentManager {
+  getSupportedAgents(): AgentInfo[] {
+    return [...AGENTS];
+  }
+
   async detectAgents(): Promise<AgentInfo[]> {
     const available: AgentInfo[] = [];
 
