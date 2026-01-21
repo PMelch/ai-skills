@@ -29,6 +29,5 @@ npm-debug.log*
 .ai-skills.json
 .github/copilot-instructions.md
 .codex/
-.gemini/
 bun.lock
 /.claude/CLAUDE.md
