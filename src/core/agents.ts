@@ -1,5 +1,4 @@
 import { promises as fs } from 'fs';
-import { join } from 'path';
 import { homedir } from 'os';
 import { BaseAgent, AgentInfo } from './agents/base.js';
 import { ClaudeAgent } from './agents/claude.js';

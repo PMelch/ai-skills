@@ -86,7 +86,7 @@ export async function sync(): Promise<void> {
                                   }
                                 }              }
             }
-          } catch (error) {
+          } catch {
             // Skip entries we can't process
           }
         }
