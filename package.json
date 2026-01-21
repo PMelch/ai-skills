@@ -1,6 +1,6 @@
 {
   "name": "@pmelch/ai-skills",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CLI tool to manage AI agent skills centrally",
   "type": "module",
   "main": "dist/index.js",
@@ -31,7 +31,7 @@
   "author": "PMelch",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/petermelchart/ai-skills.git"
+    "url": "git+https://github.com/PMelch/ai-skills.git"
   },
   "license": "MIT",
   "dependencies": {
