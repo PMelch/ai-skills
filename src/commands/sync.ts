@@ -3,7 +3,8 @@ import ora from 'ora';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import { ConfigManager } from '../core/config.js';
-import { AgentManager, getAgentInfo } from '../core/agents.js';
+import { getAgentInfo } from '../core/agents.js';
+import { createSymlink } from '../core/utils.js';
 
 export async function sync(): Promise<void> {
   console.log(chalk.bold.cyan('\n🔄 Syncing AI Skills\n'));
@@ -12,8 +13,7 @@ export async function sync(): Promise<void> {
   
   try {
     const configManager = new ConfigManager();
-    const agentManager = new AgentManager();
-    
+
     // Check if initialized
     if (!await configManager.isInitialized()) {
       spinner.fail('Not initialized');
@@ -74,18 +74,17 @@ export async function sync(): Promise<void> {
                 if (!skillFolders.includes(skillName)) {
                   await fs.unlink(targetPath);
                   removed.push(skillName);
-                } else {
-                  // Verify symlink target exists
-                  try {
-                    await fs.access(linkTarget);
-                  } catch {
-                    // Target doesn't exist, recreate symlink
-                    await fs.unlink(targetPath);
-                    const sourcePath = join(centralDir, skillName);
-                    await fs.symlink(sourcePath, targetPath, 'dir');
-                  }
-                }
-              }
+                                  } else {
+                                  // Verify symlink target exists
+                                  try {
+                                    await fs.access(linkTarget);
+                                  } catch {
+                                    // Target doesn't exist, recreate symlink
+                                    await fs.unlink(targetPath);
+                                    const sourcePath = join(centralDir, skillName);
+                                    await createSymlink(sourcePath, targetPath);
+                                  }
+                                }              }
             }
           } catch (error) {
             // Skip entries we can't process
@@ -104,7 +103,7 @@ export async function sync(): Promise<void> {
           } catch {
             // Doesn't exist, create it
             try {
-              await fs.symlink(sourcePath, targetPath, 'dir');
+              await createSymlink(sourcePath, targetPath);
               created.push(skillName);
             } catch (error) {
               // Log but continue

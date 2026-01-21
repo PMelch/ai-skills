@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs';
 import { join, dirname } from 'path';
+import { createSymlink } from '../utils.js';
 
 export interface AgentInfo {
   id: string;
@@ -95,7 +96,7 @@ export abstract class BaseAgent {
 
       // Create symlink
       try {
-        await fs.symlink(sourcePath, targetPath, 'dir');
+        await createSymlink(sourcePath, targetPath);
       } catch (error) {
         // ignore
       }
