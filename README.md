@@ -1,4 +1,4 @@
-# ai-skills
+# @pmelch/ai-skills
 
 A CLI tool to manage AI agent skills centrally from `~/.config/ai-skills` with automatic syncing to agent-specific folders.
 
@@ -15,14 +15,14 @@ A CLI tool to manage AI agent skills centrally from `~/.config/ai-skills` with a
 ### Via npx (No installation required)
 
 ```bash
-npx ai-skills init
-npx ai-skills activate
+npx @pmelch/ai-skills init
+npx @pmelch/ai-skills activate
 ```
 
 ### Global Installation
 
 ```bash
-npm install -g ai-skills
+npm install -g @pmelch/ai-skills
 ai-skills init
 ai-skills activate
 ```
@@ -43,7 +43,7 @@ This will:
 3. Create symlinks from agent folders to the central directory
 
 **Options:**
-- `--agents <agents...>` - Specify agents to configure (e.g., `--agents claude gemini` or `--agents claude,gemini`)
+- `--agents <agents...>` - Specify agents to configure. Supports multiple space-separated or comma-separated values (e.g., `--agents claude gemini` or `--agents claude,gemini`).
 
 ### Sync Skills
 
@@ -58,11 +58,6 @@ This will:
 2. Create symlinks for new skills in all configured agent directories
 3. Remove symlinks to skills that no longer exist
 4. Show summary of changes
-
-Use this command after:
-- Adding new skill folders to `~/.config/ai-skills/`
-- Removing skill folders from `~/.config/ai-skills/`
-- Setting up a new machine or agent
 
 ### Activate Skills
 
@@ -80,8 +75,8 @@ This will:
 5. Update agent-specific configuration files (e.g., `.copilot/instructions.md`, `.claude/CLAUDE.md`)
 
 **Options:**
-- `--skills <skills...>` - Specify skills to activate without prompts (e.g., `--skills skill-1 skill-2` or `--skills skill-1,skill-2`)
-- `--agents <agents...>` - Specify agents to target without prompts (e.g., `--agents copilot claude` or `--agents copilot,claude`)
+- `--skills <skills...>` - Specify skills to activate without prompts. Supports space-separated or comma-separated values (e.g., `--skills skill-1 skill-2` or `--skills skill-1,skill-2`).
+- `--agents <agents...>` - Specify agents to target without prompts. Supports space-separated or comma-separated values (e.g., `--agents copilot claude` or `--agents copilot,claude`).
 
 **Examples:**
 ```bash
@@ -90,9 +85,6 @@ ai-skills activate
 
 # Activate specific skills for all configured agents
 ai-skills activate --skills tdd-protocol security-auditor
-
-# Activate skills for specific agents
-ai-skills activate --skills tdd-protocol --agents copilot claude
 
 # Comma-separated format
 ai-skills activate --skills tdd-protocol,security-auditor --agents copilot
