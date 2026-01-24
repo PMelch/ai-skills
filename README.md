@@ -122,10 +122,12 @@ project-dir/
 
 ## Supported Agents
 
-- **Claude** (`~/.claude/skills`, config: `.claude/CLAUDE.md`)
-- **Copilot** (`~/.copilot/skills`, config: `.github/copilot-instructions.md`)
-- **Codex** (`~/.codex/skills`)
-- **Gemini** (`~/.gemini/skills`)
+| Agent | Global Skill Config (Symlink Dir) | Project Activation (Edited File) |
+|-------|-----------------------------------|----------------------------------|
+| **Claude** | `~/.claude/skills` | `.claude/CLAUDE.md` |
+| **Copilot** | `~/.copilot/skills` | `.github/copilot-instructions.md` |
+| **Codex** | `~/.codex/skills` | `.codex/config.toml` |
+| **Gemini** | `~/.gemini/skills` | `.gemini/settings.json` |
 
 More agents can be easily added! See [Adding New Agents](docs/adding-new-agents.md) for details.
 
