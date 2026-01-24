@@ -90,36 +90,6 @@ ai-skills activate --skills tdd-protocol security-auditor
 ai-skills activate --skills tdd-protocol,security-auditor --agents copilot
 ```
 
-## Directory Structure
-
-```
-~/.config/ai-skills/          # Central skill storage
-  ├── skill-1/
-  ├── skill-2/
-  └── skill-3/
-
-~/.claude/skills/             # Claude skills (symlinked)
-  ├── skill-1 -> ~/.config/ai-skills/skill-1
-  └── skill-2 -> ~/.config/ai-skills/skill-2
-
-~/.copilot/skills/            # Copilot skills (symlinked)
-  ├── skill-1 -> ~/.config/ai-skills/skill-1
-  └── skill-2 -> ~/.config/ai-skills/skill-2
-
-~/.codex/skills/              # Codex skills (symlinked)
-  └── skill-3 -> ~/.config/ai-skills/skill-3
-
-~/.gemini/skills/             # Gemini skills (symlinked)
-  └── skill-3 -> ~/.config/ai-skills/skill-3
-
-project-dir/
-  ├── .ai-skills.json         # Project-specific skill activation
-  ├── .github/
-  │   └── copilot-instructions.md  # Copilot configuration
-  └── .claude/
-      └── CLAUDE.md           # Claude configuration
-```
-
 ## Supported Agents
 
 | Agent | Global Skill Config (Symlink Dir) | Project Activation (Edited File) |
