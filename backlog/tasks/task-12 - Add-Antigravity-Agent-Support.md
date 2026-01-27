@@ -4,6 +4,7 @@ title: Add Antigravity Agent Support
 status: To Do
 assignee: []
 created_date: '2026-01-24 10:35'
+updated_date: '2026-01-27 11:41'
 labels: []
 dependencies: []
 ---
@@ -63,9 +64,32 @@ export class AntigravityAgent extends BaseAgent {
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] Research on Antigravity config completed.
-- [ ] `AntigravityAgent` class implemented.
-- [ ] Integration with Antigravity's rule system working.
-- [ ] Tests added.
+- [ ] #1 Research on Antigravity config completed.
+- [ ] #2 `AntigravityAgent` class implemented.
+- [ ] #3 Integration with Antigravity's rule system working.
+- [ ] #4 Tests added.
 <!-- AC:END -->
-<!-- SECTION:DESCRIPTION:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+## Document Findings (CombineSkilsAndRules.md)
+
+- **Architecture**: Directory Scanner
+- **Config Path**: `.agent/rules/` (Workspace) and `~/.gemini/GEMINI.md` (Global)
+- **Integration Strategy**: **Direct Symlink** (fully supported)
+- **File Extension**: `.md`
+- **Frontmatter**: Native - globs supported
+
+### Unique Feature: @mention Import
+Antigravity has a unique `@mention` feature for files. Can create a single rule file that contains references like `@/Users/me/.agentrules/skills/python.md` to "import" skills without OS-level symlinks.
+
+### Implementation Approach
+1. Primary: Symlink global skill files into `.agent/rules/`
+2. Alternative: Use @mention references in a manifest file
+
+### Key Changes from Original Research
+- Config path is `.agent/rules/` NOT `.antigravity/`
+- Global path is `~/.gemini/GEMINI.md`
+- Symlinks are fully supported
+<!-- SECTION:NOTES:END -->

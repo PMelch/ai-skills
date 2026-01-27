@@ -4,6 +4,7 @@ title: Add Cline Agent Support
 status: To Do
 assignee: []
 created_date: '2026-01-24 10:38'
+updated_date: '2026-01-27 11:41'
 labels: []
 dependencies: []
 ---
@@ -67,9 +68,28 @@ export class ClineAgent extends BaseAgent {
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] Research completed on `.clinerules` structure.
-- [ ] `ClineAgent` class implemented.
-- [ ] Project activation logic implemented.
-- [ ] Integration tests added.
+- [ ] #1 Research completed on `.clinerules` structure.
+- [ ] #2 `ClineAgent` class implemented.
+- [ ] #3 Project activation logic implemented.
+- [ ] #4 Integration tests added.
 <!-- AC:END -->
-<!-- SECTION:DESCRIPTION:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+## Document Findings (CombineSkilsAndRules.md)
+
+- **Architecture**: Monolithic File Consumer
+- **Config Path**: `.clinerules`
+- **Integration Strategy**: **Concatenation/Append**
+- **File Extension**: `.md`
+- **Frontmatter**: Ignored (context only)
+
+### Implementation Approach
+Since Cline defaults to a single file, the Skill Bridge needs to **append** the content of selected global skills into the `.clinerules` file.
+
+### Notes
+- Document confirms single-file approach (not directory)
+- Content concatenation is the correct strategy
+- Original research was mostly correct
+<!-- SECTION:NOTES:END -->

@@ -4,6 +4,7 @@ title: Add Roo Code Agent Support
 status: To Do
 assignee: []
 created_date: '2026-01-24 10:35'
+updated_date: '2026-01-27 11:41'
 labels: []
 dependencies: []
 ---
@@ -64,9 +65,37 @@ export class RooAgent extends BaseAgent {
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] Research completed on `.roomodes` vs `.clinerules` priority.
-- [ ] `RooAgent` class implemented.
-- [ ] Project configuration update logic implemented.
-- [ ] Tests added.
+- [ ] #1 Research completed on `.roomodes` vs `.clinerules` priority.
+- [ ] #2 `RooAgent` class implemented.
+- [ ] #3 Project configuration update logic implemented.
+- [ ] #4 Tests added.
 <!-- AC:END -->
-<!-- SECTION:DESCRIPTION:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+## Document Findings (CombineSkilsAndRules.md)
+
+**RooCode is the GOLD STANDARD** for this architecture according to the document.
+
+- **Architecture**: Recursive Directory Scanner
+- **Config Path**: `.roo/rules/` (Project) and `~/.roo/rules/` (Global)
+- **Integration Strategy**: **Direct Symlink** (fully supported)
+- **File Extension**: `.md`
+- **Frontmatter**: Native - used for conditional rule application via `globs` field
+
+### Key Features
+- Supports mode-specific directories: `.roo/rules-architect/`, `.roo/rules-code/`, etc.
+- Can map specific global skills to specific agent personas (modes)
+- Reads YAML frontmatter to apply rules conditionally
+- Follows filesystem standards including symlinks
+
+### Implementation Approach
+1. Create symlink from `~/.agentrules/skills/my-skill.md` to `.roo/rules/my-skill.md`
+2. Support mode-specific skill mapping if needed
+3. Leverage frontmatter for conditional activation
+
+### Key Changes from Original Research
+- Use `.roo/rules/` NOT `.roomodes` or `.clinerules`
+- Symlinks work perfectly - this is the ideal agent for the architecture
+<!-- SECTION:NOTES:END -->

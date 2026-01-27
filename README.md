@@ -94,7 +94,7 @@ ai-skills activate --skills tdd-protocol,security-auditor --agents copilot
 
 | Agent | Global Skill Config (Symlink Dir) | Project Activation (Edited File) |
 |-------|-----------------------------------|----------------------------------|
-| **Claude** | `~/.claude/skills` | `.claude/CLAUDE.md` |
+| **Claude** | `~/.claude/skills` | `.claude/CLAUDE.md` | 
 | **Copilot** | `~/.copilot/skills` | `.github/copilot-instructions.md` |
 | **Codex** | `~/.codex/skills` | `.codex/config.toml` |
 | **Gemini** | `~/.gemini/skills` | `.gemini/settings.json` |
