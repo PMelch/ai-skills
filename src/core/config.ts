@@ -58,10 +58,22 @@ export class ConfigManager {
     await fs.writeFile(this.configFile, JSON.stringify(updated, null, 2), 'utf-8');
   }
 
-  async getConfiguredAgents(): Promise<import('./agents.js').AgentInfo[]> {
+  async getConfiguredAgents(): Promise<{ agents: import('./agents.js').AgentInfo[], skippedAgentIds: string[] }> {
     const config = await this.getConfig();
-    const { getAgentInfo } = await import('./agents.js');
-    return config.agents.map(id => getAgentInfo(id));
+    const { tryGetAgentInfo } = await import('./agents.js');
+    const agents: import('./agents.js').AgentInfo[] = [];
+    const skippedAgentIds: string[] = [];
+    
+    for (const id of config.agents) {
+      const info = tryGetAgentInfo(id);
+      if (info) {
+        agents.push(info);
+      } else {
+        skippedAgentIds.push(id);
+      }
+    }
+    
+    return { agents, skippedAgentIds };
   }
 
   getConfigDir(): string {

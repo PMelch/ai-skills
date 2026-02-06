@@ -22,8 +22,13 @@ export async function sync(): Promise<void> {
     }
     
     // Get configured agents
-    const configuredAgents = await configManager.getConfiguredAgents();
+    const { agents: configuredAgents, skippedAgentIds } = await configManager.getConfiguredAgents();
     spinner.succeed('Configuration loaded');
+    
+    if (skippedAgentIds.length > 0) {
+      console.log(chalk.yellow(`\n⚠️  Skipping unsupported agent(s): ${skippedAgentIds.join(', ')}`));
+      console.log(chalk.dim('These agents are not yet implemented and will be ignored.\n'));
+    }
     
     if (configuredAgents.length === 0) {
       console.log(chalk.yellow('\n⚠️  No agents configured'));

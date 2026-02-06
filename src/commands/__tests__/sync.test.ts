@@ -53,7 +53,7 @@ const createDirent = (name: string, isDir = false, isSym = false): Dirent => ({
 describe('Sync Command', () => {
   const mockConfigManager = {
     isInitialized: jest.fn<() => Promise<boolean>>(),
-    getConfiguredAgents: jest.fn<() => Promise<any[]>>(),
+    getConfiguredAgents: jest.fn<() => Promise<any>>(),
     getConfigDir: jest.fn<() => string>(),
   };
 
@@ -64,7 +64,7 @@ describe('Sync Command', () => {
     
     // Default success path
     mockConfigManager.isInitialized.mockResolvedValue(true);
-    mockConfigManager.getConfiguredAgents.mockResolvedValue([{ id: 'claude', name: 'Claude' }]);
+    mockConfigManager.getConfiguredAgents.mockResolvedValue({ agents: [{ id: 'claude', name: 'Claude' }], skippedAgentIds: [] });
     mockConfigManager.getConfigDir.mockReturnValue('/central/skills');
     
     (getAgentInfo as jest.Mock).mockReturnValue({
@@ -85,7 +85,7 @@ describe('Sync Command', () => {
   });
 
   it('should warn if no agents configured', async () => {
-    mockConfigManager.getConfiguredAgents.mockResolvedValue([]);
+    mockConfigManager.getConfiguredAgents.mockResolvedValue({ agents: [], skippedAgentIds: [] });
     
     await sync();
     

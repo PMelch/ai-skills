@@ -77,6 +77,21 @@ describe('AgentManager', () => {
       expect(() => getAgentInfo('unknown')).toThrow('Unknown agent: unknown');
     });
 
+    it('should return undefined for unknown agent using tryGetAgentInfo', () => {
+      const { tryGetAgentInfo } = require('../agents.js');
+      const result = tryGetAgentInfo('unknown');
+      expect(result).toBeUndefined();
+    });
+
+    it('should return agent info for known agent using tryGetAgentInfo', () => {
+      const { tryGetAgentInfo } = require('../agents.js');
+      const result = tryGetAgentInfo('claude');
+      expect(result).toMatchObject({
+        id: 'claude',
+        name: 'Claude',
+      });
+    });
+
     it('should return Codex agent info', () => {
       const agent = getAgentInfo('codex');
       expect(agent).toMatchObject({
@@ -91,6 +106,19 @@ describe('AgentManager', () => {
         id: 'copilot',
         name: 'Copilot',
       });
+    });
+  });
+
+  describe('tryGetAgent', () => {
+    it('should return undefined for unknown agent', () => {
+      const result = agentManager.tryGetAgent('nonexistent-agent');
+      expect(result).toBeUndefined();
+    });
+
+    it('should return the agent for a known agent', () => {
+      const result = agentManager.tryGetAgent('claude');
+      expect(result).toBeDefined();
+      expect(result!.id).toBe('claude');
     });
   });
 

@@ -128,12 +128,13 @@ describe('ConfigManager', () => {
     it('should return agent info for configured agents', async () => {
       await configManager.initialize(['claude']);
       
-      const agents = await configManager.getConfiguredAgents();
-      expect(agents).toHaveLength(1);
-      expect(agents[0]).toMatchObject({
+      const result = await configManager.getConfiguredAgents();
+      expect(result.agents).toHaveLength(1);
+      expect(result.agents[0]).toMatchObject({
         id: 'claude',
         name: 'Claude',
       });
+      expect(result.skippedAgentIds).toEqual([]);
     });
 
     it('should handle multiple agents', async () => {
@@ -147,8 +148,33 @@ describe('ConfigManager', () => {
       
       await configManager.initialize(['claude', 'gemini']);
       
-      const agents = await configManager.getConfiguredAgents();
-      expect(agents.length).toBeGreaterThanOrEqual(2);
+      const result = await configManager.getConfiguredAgents();
+      expect(result.agents.length).toBeGreaterThanOrEqual(2);
+    });
+
+    it('should skip unknown agents and return them in skipped list', async () => {
+      await configManager.initialize(['claude', 'unknown-agent', 'gemini']);
+      
+      const result = await configManager.getConfiguredAgents();
+      expect(result.agents).toHaveLength(2);
+      expect(result.agents.map((a: any) => a.id)).toEqual(['claude', 'gemini']);
+      expect(result.skippedAgentIds).toEqual(['unknown-agent']);
+    });
+
+    it('should return empty skipped list when all agents are known', async () => {
+      await configManager.initialize(['claude']);
+      
+      const result = await configManager.getConfiguredAgents();
+      expect(result.agents).toHaveLength(1);
+      expect(result.skippedAgentIds).toEqual([]);
+    });
+
+    it('should handle config with only unknown agents', async () => {
+      await configManager.initialize(['totally-fake', 'not-real']);
+      
+      const result = await configManager.getConfiguredAgents();
+      expect(result.agents).toHaveLength(0);
+      expect(result.skippedAgentIds).toEqual(['totally-fake', 'not-real']);
     });
   });
 

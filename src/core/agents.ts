@@ -37,6 +37,10 @@ export class AgentManager {
     return agent;
   }
 
+  tryGetAgent(id: string): BaseAgent | undefined {
+    return this.agents.get(id);
+  }
+
   getSupportedAgents(): AgentInfo[] {
     return Array.from(this.agents.values()).map(a => a.getInfo());
   }
@@ -88,4 +92,10 @@ export class AgentManager {
 export function getAgentInfo(id: string): AgentInfo {
   const manager = new AgentManager();
   return manager.getAgent(id).getInfo();
+}
+
+export function tryGetAgentInfo(id: string): AgentInfo | undefined {
+  const manager = new AgentManager();
+  const agent = manager.tryGetAgent(id);
+  return agent?.getInfo();
 }

@@ -33,7 +33,7 @@ jest.mock('../../core/skills.js', () => ({ SkillManager: jest.fn() }));
 // Mock implementations
 const mockConfigManager = {
     isInitialized: jest.fn<() => Promise<boolean>>().mockResolvedValue(true),
-    getConfiguredAgents: jest.fn<() => Promise<any[]>>().mockResolvedValue([{ id: 'agent1', name: 'Agent 1' }]),
+    getConfiguredAgents: jest.fn<() => Promise<any>>().mockResolvedValue({ agents: [{ id: 'agent1', name: 'Agent 1' }], skippedAgentIds: [] }),
     updateConfig: jest.fn<(updates: any) => Promise<void>>().mockResolvedValue(undefined),
 };
 const mockAgentManager = {
@@ -56,7 +56,7 @@ describe('Activate Command', () => {
         (SkillManager as unknown as jest.Mock).mockImplementation(() => mockSkillManager);
 
         // Reset default mock returns
-        mockConfigManager.getConfiguredAgents.mockResolvedValue([{ id: 'agent1', name: 'Agent 1' }]);
+        mockConfigManager.getConfiguredAgents.mockResolvedValue({ agents: [{ id: 'agent1', name: 'Agent 1' }], skippedAgentIds: [] });
         mockAgentManager.detectAgents.mockResolvedValue([{ id: 'agent1', name: 'Agent 1' }]);
 
         // Mock checkbox responses
@@ -65,7 +65,7 @@ describe('Activate Command', () => {
 
     it('should include detected but unconfigured agents in selection and update config', async () => {
         // Setup: Config has Agent 1, Detect has Agent 1 AND Agent 2
-        mockConfigManager.getConfiguredAgents.mockResolvedValue([{ id: 'agent1', name: 'Agent 1' }]);
+        mockConfigManager.getConfiguredAgents.mockResolvedValue({ agents: [{ id: 'agent1', name: 'Agent 1' }], skippedAgentIds: [] });
         mockAgentManager.detectAgents.mockResolvedValue([
             { id: 'agent1', name: 'Agent 1' },
             { id: 'agent2', name: 'Agent 2' }
@@ -150,7 +150,7 @@ describe('Activate Command', () => {
     });
 
     it('should validate agent names when provided via --agents flag', async () => {
-        mockConfigManager.getConfiguredAgents.mockResolvedValue([]);
+        mockConfigManager.getConfiguredAgents.mockResolvedValue({ agents: [], skippedAgentIds: [] });
         mockAgentManager.detectAgents.mockResolvedValue([{ id: 'agent1', name: 'Agent 1' }]);
         
         const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});

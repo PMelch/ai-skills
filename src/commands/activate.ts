@@ -72,8 +72,14 @@ export async function activate(options?: ActivateOptions): Promise<void> {
     }
     
     // Get configured agents
-    const configuredAgents = await configManager.getConfiguredAgents();
+    const { agents: configuredAgents, skippedAgentIds } = await configManager.getConfiguredAgents();
     const detectedAgents = await agentManager.detectAgents();
+    
+    // Warn about skipped agents
+    if (skippedAgentIds.length > 0) {
+      console.log(chalk.yellow(`\n⚠️  Skipping unsupported agent(s): ${skippedAgentIds.join(', ')}`));
+      console.log(chalk.dim('These agents are not yet implemented and will be ignored.\n'));
+    }
     
     // Merge agents
     const allAgentsMap = new Map();
