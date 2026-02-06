@@ -5,6 +5,8 @@ import { ClaudeAgent } from './agents/claude.js';
 import { GeminiAgent } from './agents/gemini.js';
 import { CodexAgent } from './agents/codex.js';
 import { CopilotAgent } from './agents/copilot.js';
+import { AntigravityAgent } from './agents/antigravity.js';
+import { PiAgent } from './agents/pi.js';
 
 export type { AgentInfo };
 
@@ -19,7 +21,9 @@ export class AgentManager {
       new ClaudeAgent(home),
       new GeminiAgent(home),
       new CodexAgent(home),
-      new CopilotAgent(home)
+      new CopilotAgent(home),
+      new AntigravityAgent(home),
+      new PiAgent(home)
     ];
 
     agents.forEach(agent => this.agents.set(agent.id, agent));

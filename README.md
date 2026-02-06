@@ -98,6 +98,8 @@ ai-skills activate --skills tdd-protocol,security-auditor --agents copilot
 | **Copilot** | `~/.copilot/skills` | `.github/copilot-instructions.md` |
 | **Codex** | `~/.codex/skills` | `.codex/config.toml` |
 | **Gemini** | `~/.gemini/skills` | `.gemini/settings.json` |
+| **Antigravity** | `~/.antigravity/skills` | `.agent/rules/` (symlinked) |
+| **Pi** | `~/.pi/agent/skills` | `AGENTS.md` |
 
 More agents can be easily added! See [Adding New Agents](docs/adding-new-agents.md) for details.
 

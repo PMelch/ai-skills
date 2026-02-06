@@ -97,8 +97,8 @@ describe('AgentManager', () => {
   describe('getSupportedAgents', () => {
     it('should return all supported agents', () => {
       const agents = agentManager.getSupportedAgents();
-      expect(agents).toHaveLength(4);
-      expect(agents.map(a => a.id)).toEqual(expect.arrayContaining(['claude', 'gemini', 'codex', 'copilot']));
+      expect(agents).toHaveLength(6);
+      expect(agents.map(a => a.id)).toEqual(expect.arrayContaining(['claude', 'gemini', 'codex', 'copilot', 'antigravity', 'pi']));
     });
   });
 
