@@ -38,6 +38,7 @@ const mockConfigManager = {
 };
 const mockAgentManager = {
     activateSkills: jest.fn<(id: string, skills: string[]) => Promise<void>>().mockResolvedValue(undefined),
+    updateProjectConfiguration: jest.fn<(id: string, skills: string[]) => Promise<void>>().mockResolvedValue(undefined),
     detectAgents: jest.fn<() => Promise<any[]>>().mockResolvedValue([{ id: 'agent1', name: 'Agent 1' }]),
 };
 const mockSkillManager = {
@@ -63,7 +64,7 @@ describe('Activate Command', () => {
         (inquirer.checkbox as any).mockResolvedValue(['skill-1']); // Default response
     });
 
-    it('should include detected but unconfigured agents in selection and update config', async () => {
+    it('should include detected but unconfigured agents in selection without updating global config', async () => {
         // Setup: Config has Agent 1, Detect has Agent 1 AND Agent 2
         mockConfigManager.getConfiguredAgents.mockResolvedValue({ agents: [{ id: 'agent1', name: 'Agent 1' }], skippedAgentIds: [] });
         mockAgentManager.detectAgents.mockResolvedValue([
@@ -86,14 +87,13 @@ describe('Activate Command', () => {
             ])
         }));
 
-        // Verify config was updated with new list
-        expect(mockConfigManager.updateConfig).toHaveBeenCalledWith({
-            agents: expect.arrayContaining(['agent1', 'agent2'])
-        });
-        
-        // Verify activateSkills called for both
-        expect(mockAgentManager.activateSkills).toHaveBeenCalledWith('agent1', ['skill-1']);
-        expect(mockAgentManager.activateSkills).toHaveBeenCalledWith('agent2', ['skill-1']);
+        // Verify global config was NOT updated
+        expect(mockConfigManager.updateConfig).not.toHaveBeenCalled();
+
+        // Verify project configuration was updated for both agents (not activateSkills which manages symlinks)
+        expect(mockAgentManager.updateProjectConfiguration).toHaveBeenCalledWith('agent1', ['skill-1']);
+        expect(mockAgentManager.updateProjectConfiguration).toHaveBeenCalledWith('agent2', ['skill-1']);
+        expect(mockAgentManager.activateSkills).not.toHaveBeenCalled();
     });
 
     it('should accept --skills and --agents flags and skip interactive prompts', async () => {
@@ -104,7 +104,7 @@ describe('Activate Command', () => {
         
         // Should save config with provided values
         expect(mockSkillManager.saveProjectConfig).toHaveBeenCalledWith(['skill-1'], ['agent1']);
-        expect(mockAgentManager.activateSkills).toHaveBeenCalledWith('agent1', ['skill-1']);
+        expect(mockAgentManager.updateProjectConfiguration).toHaveBeenCalledWith('agent1', ['skill-1']);
     });
 
     it('should accept --skills flag only and prompt for agents', async () => {

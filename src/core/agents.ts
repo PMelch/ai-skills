@@ -86,6 +86,11 @@ export class AgentManager {
     await agent.activateSkills(skills, centralDir);
     await agent.updateProjectConfiguration(skills, process.cwd());
   }
+
+  async updateProjectConfiguration(agentId: string, skills: string[]): Promise<void> {
+    const agent = this.getAgent(agentId);
+    await agent.updateProjectConfiguration(skills, process.cwd());
+  }
 }
 
 // Helper for backward compatibility or direct usage if needed

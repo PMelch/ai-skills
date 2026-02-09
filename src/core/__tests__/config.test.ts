@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
+import { randomUUID } from 'crypto';
 import * as os from 'os';
 
 // Mock os.homedir BEFORE importing ConfigManager
@@ -18,7 +19,7 @@ describe('ConfigManager', () => {
 
   beforeEach(async () => {
     // Create temporary directory for testing
-    tempDir = join(tmpdir(), `ai-skills-test-${Date.now()}`);
+    tempDir = join(tmpdir(), `ai-skills-test-${randomUUID()}`);
     await fs.mkdir(tempDir, { recursive: true });
 
     // Mock homedir to return tempDir
@@ -138,18 +139,12 @@ describe('ConfigManager', () => {
     });
 
     it('should handle multiple agents', async () => {
-      // Ensure clean config
-      const configDir = configManager.getConfigDir();
-      try {
-        await fs.rm(configDir, { recursive: true, force: true });
-      } catch {
-        // Ignore
-      }
-      
       await configManager.initialize(['claude', 'gemini']);
-      
+
       const result = await configManager.getConfiguredAgents();
-      expect(result.agents.length).toBeGreaterThanOrEqual(2);
+      expect(result.agents).toHaveLength(2);
+      expect(result.agents.map((a: any) => a.id)).toEqual(['claude', 'gemini']);
+      expect(result.skippedAgentIds).toEqual([]);
     });
 
     it('should skip unknown agents and return them in skipped list', async () => {

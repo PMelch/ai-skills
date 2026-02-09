@@ -120,23 +120,16 @@ export async function activate(options?: ActivateOptions): Promise<void> {
       return;
     }
 
-    // Update global config with newly selected agents
-    const uniqueAgents = Array.from(new Set([
-        ...configuredAgents.map(a => a.id), 
-        ...selectedAgents
-    ]));
-    await configManager.updateConfig({ agents: uniqueAgents });
-    
     // Save project configuration
     spinner.start('Saving project configuration...');
     await skillManager.saveProjectConfig(selectedSkills, selectedAgents);
     
     spinner.succeed('Project configuration saved');
     
-    // Apply to agents
-    spinner.start('Configuring agents...');
+    // Update agent project configurations
+    spinner.start('Updating agent configurations...');
     for (const agentId of selectedAgents) {
-      await agentManager.activateSkills(agentId, selectedSkills);
+      await agentManager.updateProjectConfiguration(agentId, selectedSkills);
     }
     spinner.succeed('Agent configuration complete');
     

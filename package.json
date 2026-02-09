@@ -15,7 +15,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "eslint src/**/*.ts",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "deploy:local": "npm run build && npm pack && cd /tmp && bun remove -g @pmelch/ai-skills 2>/dev/null || true && bun add -g $OLDPWD/pmelch-ai-skills-$(node -p \"require('$OLDPWD/package.json').version\").tgz"
   },
   "keywords": [
     "ai",
