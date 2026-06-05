@@ -7,6 +7,7 @@ import { CodexAgent } from './agents/codex.js';
 import { CopilotAgent } from './agents/copilot.js';
 import { AntigravityAgent } from './agents/antigravity.js';
 import { PiAgent } from './agents/pi.js';
+import { CursorAgent } from './agents/cursor.js';
 
 export type { AgentInfo };
 
@@ -23,7 +24,8 @@ export class AgentManager {
       new CodexAgent(home),
       new CopilotAgent(home),
       new AntigravityAgent(home),
-      new PiAgent(home)
+      new PiAgent(home),
+      new CursorAgent(home)
     ];
 
     agents.forEach(agent => this.agents.set(agent.id, agent));

@@ -39,7 +39,7 @@ ai-skills init
 
 This will:
 1. Create `~/.config/ai-skills/` directory
-2. Detect available AI agents (Claude, Gemini)
+2. Detect available supported AI agents
 3. Create symlinks from agent folders to the central directory
 
 **Options:**
@@ -100,6 +100,7 @@ ai-skills activate --skills tdd-protocol,security-auditor --agents copilot
 | **Gemini** | `~/.gemini/skills` | `.gemini/settings.json` |
 | **Antigravity** | `~/.antigravity/skills` | `.agent/rules/` (symlinked) |
 | **Pi** | `~/.pi/agent/skills` | `AGENTS.md` |
+| **Cursor** | `~/.cursor/skills` | `.cursor/rules/*.mdc` (managed copies) |
 
 More agents can be easily added! See [Adding New Agents](docs/adding-new-agents.md) for details.
 

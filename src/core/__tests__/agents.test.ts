@@ -107,6 +107,16 @@ describe('AgentManager', () => {
         name: 'Copilot',
       });
     });
+
+    it('should return Cursor agent info', () => {
+      const agent = getAgentInfo('cursor');
+      expect(agent).toMatchObject({
+        id: 'cursor',
+        name: 'Cursor',
+      });
+      expect(agent.skillsPath).toContain('.cursor');
+      expect(agent.skillsPath).toContain('skills');
+    });
   });
 
   describe('tryGetAgent', () => {
@@ -125,8 +135,8 @@ describe('AgentManager', () => {
   describe('getSupportedAgents', () => {
     it('should return all supported agents', () => {
       const agents = agentManager.getSupportedAgents();
-      expect(agents).toHaveLength(6);
-      expect(agents.map(a => a.id)).toEqual(expect.arrayContaining(['claude', 'gemini', 'codex', 'copilot', 'antigravity', 'pi']));
+      expect(agents).toHaveLength(7);
+      expect(agents.map(a => a.id)).toEqual(expect.arrayContaining(['claude', 'gemini', 'codex', 'copilot', 'antigravity', 'pi', 'cursor']));
     });
   });
 
@@ -156,6 +166,16 @@ describe('AgentManager', () => {
       const agents = await agentManager.detectAgents();
       const testAgents = agents.filter(a => a.id === 'claude' || a.id === 'gemini');
       expect(testAgents.length).toBeGreaterThanOrEqual(2);
+    });
+
+    it('should detect Cursor when directory exists', async () => {
+      await fs.mkdir(join(tempDir, '.cursor'), { recursive: true });
+
+      const agents = await agentManager.detectAgents();
+      const cursorAgent = agents.find(a => a.id === 'cursor');
+
+      expect(cursorAgent).toBeDefined();
+      expect(cursorAgent?.id).toBe('cursor');
     });
   });
 

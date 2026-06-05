@@ -65,6 +65,6 @@ export class PiAgent extends BaseAgent {
     }
 
     const skillsList = skills.map(skill => `\`${skill}\``).join(', ');
-    return `${SKILLS_ACTIVATION_START}\n# Project Instructions\n- Active global skills: ${skillsList}.\n${SKILLS_ACTIVATION_END}\n`;
+    return `${SKILLS_ACTIVATION_START}\n# Project Instructions\n- Active skills: ${skillsList}.\n${SKILLS_ACTIVATION_END}\n`;
   }
 }

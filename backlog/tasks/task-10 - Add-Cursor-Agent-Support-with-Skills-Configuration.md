@@ -1,10 +1,11 @@
 ---
-id: task-10
+id: TASK-10
 title: Add Cursor Agent Support with Skills Configuration
-status: To Do
-assignee: []
+status: Done
+assignee:
+  - Codex
 created_date: '2026-01-21 15:58'
-updated_date: '2026-01-27 11:41'
+updated_date: '2026-06-05 08:25'
 labels:
   - enhancement
   - agent-support
@@ -123,14 +124,24 @@ export class CursorAgent extends BaseAgent {
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Research completed and documented: verified global config location, symlink support, and file inclusion behavior
-- [ ] #2 CursorAgent class implemented in src/core/agents/cursor.ts following existing agent patterns
-- [ ] #3 Cursor agent registered in AgentManager (src/core/agents.ts)
-- [ ] #4 Project-specific .cursorrules file generation working with skill activation blocks
-- [ ] #5 Integration tests passing for cursor agent
-- [ ] #6 README.md updated with Cursor agent in supported agents list
-- [ ] #7 Manual testing completed: install Cursor, run ai-skills commands, verify skills are activated
+- [x] #1 Research completed and documented: verified global config location, symlink support, and file inclusion behavior
+- [x] #2 CursorAgent class implemented in src/core/agents/cursor.ts following existing agent patterns
+- [x] #3 Cursor agent registered in AgentManager (src/core/agents.ts)
+- [x] #4 Project-specific .cursorrules file generation working with skill activation blocks
+- [x] #5 Integration tests passing for cursor agent
+- [x] #6 README.md updated with Cursor agent in supported agents list
+- [x] #7 Manual testing completed: install Cursor, run ai-skills commands, verify skills are activated
 <!-- AC:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Add TDD coverage for Cursor support before implementation: CursorAgent identity/path/detection, project `.cursor/rules/*.mdc` generation from active skills, cleanup of deactivated managed rules, and AgentManager registration.
+2. Implement `src/core/agents/cursor.ts` following existing BaseAgent patterns, using `~/.cursor/skills` as the agent skills path and managed copy into project `.cursor/rules/` because Cursor rules should be physical `.mdc` files rather than symlinks.
+3. Register Cursor in `src/core/agents.ts` so `init`, `activate`, and config parsing recognize `cursor`.
+4. Update README supported-agent documentation and any stale supported-agent counts in tests.
+5. Run focused Cursor/agent tests, then the project test suite. Use the core-cycle reviewer pass and address any actionable findings.
+<!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
 
@@ -156,4 +167,33 @@ export class CursorAgent extends BaseAgent {
 - Focus on `.cursor/rules/` directory, not just `.cursorrules` file
 - **Do NOT use symlinks** - they are broken in Cursor
 - Must implement copy/sync strategy instead
+
+TDD red phase complete. Focused test command `npm test -- --runInBand src/core/agents/__tests__/cursor.test.ts src/core/__tests__/agents.test.ts` failed as expected because `../cursor.js` is missing and `cursor` is not registered in AgentManager.
+
+Green phase complete. Focused Cursor/registry test command now passes: 2 suites, 33 tests. Implementation copies central skills into `.cursor/rules/*.mdc`, falls back to `~/.cursor/skills`, and preserves user-owned Cursor rules.
+
+Manual smoke test completed with Cursor.app present locally. Using a temporary HOME/project, `node dist/cli.js init --agents cursor` and `node dist/cli.js activate --skills sample-skill --agents cursor` succeeded and generated `.cursor/rules/sample-skill.mdc` as a regular managed file. Acceptance criterion #4 uses stale `.cursorrules` wording; implementation follows Cursor's current Project Rules format (`.cursor/rules/*.mdc`) per Cursor docs and existing task implementation notes.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implemented Cursor agent support using Cursor's current Project Rules format.
+
+Changes:
+- Added `CursorAgent` with id `cursor`, global skill path `~/.cursor/skills`, and project activation into `.cursor/rules/*.mdc` managed copies.
+- Cursor rule generation reads central `~/.config/ai-skills` first and falls back to `~/.cursor/skills`, strips skill frontmatter, writes `alwaysApply: true`, and preserves user-owned rules by only updating/removing files with ai-skills managed markers.
+- Registered Cursor in `AgentManager` so `init`, detection, activation, and configured-agent parsing recognize it.
+- Added Cursor agent tests covering metadata, detection, central-source activation, managed file update/removal, user-rule preservation, and alternative primary markdown filenames.
+- Updated README supported agents and stale detection wording.
+
+Verification:
+- TDD red confirmed missing Cursor implementation failed focused tests.
+- Focused tests passed: `npm test -- --runInBand src/core/agents/__tests__/cursor.test.ts src/core/__tests__/agents.test.ts` (2 suites, 33 tests).
+- Full tests passed: `npm test -- --runInBand` (14 suites, 120 tests).
+- Build passed: `npm run build`.
+- Manual smoke passed with temporary HOME/project and local Cursor.app present: `init --agents cursor` and `activate --skills sample-skill --agents cursor` generated a regular `.cursor/rules/sample-skill.mdc` file.
+- Core-cycle review approved with no issues.
+
+Note: `npm run lint` could not run because the local eslint binary is missing; `npm ls eslint --depth=0` reports no installed eslint package despite package.json declaring it.
+<!-- SECTION:FINAL_SUMMARY:END -->
